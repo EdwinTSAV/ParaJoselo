@@ -2,20 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ControlBala : MonoBehaviour
+public class ControlCalibre : MonoBehaviour
 {
     public float velocity;
     private Rigidbody2D rb;
-    
-    private ControlPuntaje Puntaje;
+    // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        Puntaje = FindObjectOfType<ControlPuntaje>();
         Destroy(this.gameObject, 3);
-        //Debug.Log(Puntaje.GetPoint());
     }
 
+    // Update is called once per frame
     void Update()
     {
         rb.velocity = new Vector2(velocity, rb.velocity.y);
@@ -26,8 +24,6 @@ public class ControlBala : MonoBehaviour
         {
             Destroy(collision.gameObject);
             Destroy(this.gameObject);
-            Puntaje.AddPoints(10);
-            Debug.Log(Puntaje.GetPoint());
         }
     }
 }

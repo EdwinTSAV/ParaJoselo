@@ -12,6 +12,8 @@ public class ControlPersonaje : MonoBehaviour
     public AudioClip AudioAtaque;
     public AudioClip AudioCoins;
 
+    public ControlPuntaje Puntaje;
+
     private AudioSource _audioSource;
     private Transform _transform;
     private Rigidbody2D rb;
@@ -104,6 +106,8 @@ public class ControlPersonaje : MonoBehaviour
             coins = true;
             Destroy(collision.gameObject);
             _audioSource.PlayOneShot(AudioCoins);
+            Puntaje.AddPoints(5);
+            Debug.Log(Puntaje.GetPoint());
         }
     }
 }
