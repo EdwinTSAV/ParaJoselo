@@ -27,9 +27,6 @@ public class ControlMegaman : MonoBehaviour
     private SpriteRenderer sr;
     private Transform _transform;
 
-    private float temporizador;
-    
-
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();

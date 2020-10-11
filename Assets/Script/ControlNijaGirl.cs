@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Video;
 
 public class ControlNijaGirl : MonoBehaviour
 {
@@ -9,6 +10,8 @@ public class ControlNijaGirl : MonoBehaviour
 
     public AudioClip AudioJump;
     public AudioClip AudioAtaque;
+
+    public VidaText Vida;
 
     private AudioSource _audioSource;
     private Rigidbody2D rb;
@@ -23,8 +26,12 @@ public class ControlNijaGirl : MonoBehaviour
     private const int ANIM_SALTAR = 2;
     private const int ANIM_ATACAR = 3;
     private const int ANIM_MUERTE = 4;
+    private const int ANIM_AGACHA = 5;
+    
+    private int vidas = 3;
 
     private bool muerte = false;
+    private int numSalto = 0;
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -51,11 +58,13 @@ public class ControlNijaGirl : MonoBehaviour
             animator.SetInteger("Estado", ANIM_CORRER);
             sr.flipX = true;
         }
-        if (Input.GetKeyUp(KeyCode.UpArrow))
+        if (Input.GetKeyDown(KeyCode.UpArrow) && numSalto < 2)
         {
+            rb.velocity = new Vector2(rb.velocity.x, 0);
             rb.AddForce(new Vector2(rb.velocity.x, JumpForce), ForceMode2D.Impulse);
             animator.SetInteger("Estado", ANIM_SALTAR);
             _audioSource.PlayOneShot(AudioJump);
+            numSalto++;
         }
         if (Input.GetKeyUp("x"))
         {
@@ -72,6 +81,10 @@ public class ControlNijaGirl : MonoBehaviour
             }
             _audioSource.PlayOneShot(AudioAtaque);
         }
+        if (Input.GetKey(KeyCode.C))
+        {
+            animator.SetInteger("Estado", ANIM_AGACHA);
+        }
         if (muerte)
             animator.SetInteger("Estado", ANIM_MUERTE);
     }
@@ -80,6 +93,21 @@ public class ControlNijaGirl : MonoBehaviour
         if (collision.gameObject.tag == "Obstaculo" || collision.gameObject.tag == "Enemigo")
         {
             muerte = true;
+        }
+        if (collision.gameObject.tag == "Pelota")
+        {
+            vidas--;
+            if (vidas == 0) muerte = true;
+            
+            if (vidas >= 0)
+            {
+                Vida.QuitarVida(1);
+                Debug.Log(Vida.GetVida());
+            }
+        }
+        if (collision.gameObject.layer == 8)
+        {
+            numSalto = 0;
         }
     }
 }
