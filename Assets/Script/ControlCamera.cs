@@ -18,6 +18,6 @@ public class ControlCamera : MonoBehaviour
         x = tarjet.transform.position.x;
         y = _transform.position.y;
         z = _transform.position.z;
-        _transform.position = new Vector3(x + 4, y, z); // estaba en 15
+        _transform.position = new Vector3(x + 20, y, z); // estaba en 15
     }
 }

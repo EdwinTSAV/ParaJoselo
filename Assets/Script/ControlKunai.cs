@@ -6,9 +6,12 @@ public class ControlKunai : MonoBehaviour
 {
     public float velocity;
     private Rigidbody2D rb;
+
+    private ControlPuntaje Puntaje;
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        Puntaje = FindObjectOfType<ControlPuntaje>();
         Destroy(this.gameObject, 3);
     }
 
@@ -22,6 +25,8 @@ public class ControlKunai : MonoBehaviour
         {
             Destroy(collision.gameObject);
             Destroy(this.gameObject);
+            Puntaje.AddPoints(10);
+            Debug.Log(Puntaje.GetPoint());
         }
     }
 }

@@ -27,10 +27,17 @@ public class ControlNijaGirl : MonoBehaviour
     private const int ANIM_ATACAR = 3;
     private const int ANIM_MUERTE = 4;
     private const int ANIM_AGACHA = 5;
-    
+    private const int ANIM_TREPAR = 6;
+    private const int ANIM_VOLAR = 7;
+    private const int ANIM_ATACAE = 8;
+
+
+
     private int vidas = 3;
 
     private bool muerte = false;
+    private bool trepar = false;
+    private bool planear = false;
     private int numSalto = 0;
     void Start()
     {
@@ -81,12 +88,52 @@ public class ControlNijaGirl : MonoBehaviour
             }
             _audioSource.PlayOneShot(AudioAtaque);
         }
-        if (Input.GetKey(KeyCode.C))
+
+        if (Input.GetKeyDown("f"))
+            animator.SetInteger("Estado", ANIM_ATACAE);
+
+        if (Input.GetKey(KeyCode.DownArrow))
         {
             animator.SetInteger("Estado", ANIM_AGACHA);
         }
         if (muerte)
             animator.SetInteger("Estado", ANIM_MUERTE);
+
+        if(trepar)
+        {
+            rb.gravityScale = 0;
+            rb.velocity = new Vector2(rb.velocity.x,0) ;
+            animator.SetInteger("Estado", ANIM_TREPAR);
+            if (Input.GetKey(KeyCode.UpArrow))
+            {
+                rb.velocity = new Vector2(rb.velocity.x, velocity);
+                //animator.SetInteger("Estado", ANIM_TREPAR);
+            }
+            if (Input.GetKey(KeyCode.DownArrow))
+            {
+                rb.velocity = new Vector2(rb.velocity.x, -velocity);
+                //animator.SetInteger("Estado", ANIM_TREPAR);
+            }
+        }
+        if(!trepar)
+            rb.gravityScale = 10;
+
+        if (Input.GetKey("z") && planear)
+        {
+            rb.gravityScale = 1;
+            numSalto = 2;
+            animator.SetInteger("Estado", ANIM_VOLAR);
+            if (Input.GetKey(KeyCode.RightArrow))
+            {
+                rb.velocity = new Vector2(velocity, -velocity);
+                sr.flipX = false;
+            }
+            if (Input.GetKey(KeyCode.LeftArrow))
+            {
+                rb.velocity = new Vector2(-velocity, -velocity);
+                sr.flipX = true;
+            }
+        }
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -108,6 +155,39 @@ public class ControlNijaGirl : MonoBehaviour
         if (collision.gameObject.layer == 8)
         {
             numSalto = 0;
+            planear = false;
+
+        }
+    }
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.gameObject.name == "Plataf")
+        {
+            planear = true;
+            
+            Debug.Log("A planear!!!!");
+        }
+    }
+
+    //private void OnTriggerEnter2D(Collider2D collision)
+    //{
+    //    if (collision.gameObject.tag == "Escalera")
+    //    {
+    //        Debug.Log("Colision con escalera");
+    //    }
+    //}
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Escalera")
+        {
+            trepar = true;
+        }
+    }
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Escalera")
+        {
+            trepar = false;
         }
     }
 }
