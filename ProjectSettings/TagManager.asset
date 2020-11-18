@@ -16,6 +16,8 @@ TagManager:
   - Crate
   - Escalera
   - Plataforma
+  - Caja
+  - CajaIzq
   layers:
   - Default
   - TransparentFX
